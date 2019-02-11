@@ -1,0 +1,50 @@
+{
+  "name": "@mealprepgenerator/api",
+  "version": "1.0.0",
+  "description": "Meal Prep Generator's API",
+  "main": "./dist/index.js",
+  "scripts": {
+    "lint": "tslint './src/**/*.ts'",
+    "test": "jest",
+    "debug": "node --nolazy --inspect-brk=9229 ./dist/index.js | bunyan -o simple",
+    "build": "tsc",
+    "start": "node ./dist/index.js"
+  },
+  "author": "Jan Karlo Dela Cruz",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "env-var": "^3.4.2",
+    "got": "^9.6.0",
+    "koa": "^2.7.0",
+    "koa-body": "4.0.8",
+    "koa-bunyan-logger": "^2.1.0",
+    "koa-router": "^7.4.0",
+    "pg": "^7.8.1",
+    "shortid": "2.2.14",
+    "squel": "^5.12.2"
+  },
+  "devDependencies": {
+    "@types/bunyan": "^1.8.5",
+    "@types/dotenv": "^6.1.0",
+    "@types/got": "^9.4.0",
+    "@types/jest": "^23.3.13",
+    "@types/koa": "^2.0.48",
+    "@types/koa-bunyan-logger": "^2.1.0",
+    "@types/koa-router": "^7.0.39",
+    "@types/node": "^10.12.21",
+    "@types/pg": "^7.4.13",
+    "@types/shortid": "0.0.29",
+    "db-migrate": "^0.11.5",
+    "db-migrate-pg": "^0.5.0",
+    "jest": "^23.0.0",
+    "ts-jest": "^23.0.0",
+    "tslint": "5.12.1",
+    "typescript": "^3.3.1"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "rootDir": "./src",
+    "testEnvironment": "node"
+  }
+}

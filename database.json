@@ -1,0 +1,5 @@
+{
+  "defaultEnv": "real",
+  "real": { "ENV": "DATABASE_URL" },
+  "test": "postgresql://admin:dev@localhost:5433/mpg_test"
+}

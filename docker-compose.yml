@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_DB=mpg
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=dev
+    ports:
+      - "5432:5432"
+  db_test:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_DB=mpg_test
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=dev
+    ports:
+      - "5433:5432"
