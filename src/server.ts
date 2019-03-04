@@ -4,7 +4,6 @@ import * as Koa from "koa";
 
 import koaBody = require("koa-body");
 import koaBunyanLogger = require("koa-bunyan-logger");
-import koaSslify = require("koa-sslify");
 
 import * as db from "./clients/database";
 import * as recipe from "./models/recipe";
@@ -28,6 +27,9 @@ export function createServer(config: Config, logger: Logger, database: db.Databa
 
   app.context.recipe = new recipe.RecipeModel({ config });
   app.context.mealPlan = new mealPlan.MealPlanModel({ database });
+
+  // TODO: DefinitelyTyped types is wrong for this. Fix it!
+  const { default: koaSslify } = require("koa-sslify");
 
   app.use(koaSslify());
   app.use(koaBunyanLogger(logger));
