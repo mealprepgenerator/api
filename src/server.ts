@@ -25,14 +25,14 @@ export function createServer(config: Config, logger: Logger, database: db.Databa
   const app = new Koa();
   const pub = publicRouter.createRouter();
 
-  app.context.recipe = new recipe.RecipeModel({config});
-  app.context.mealPlan = new mealPlan.MealPlanModel({database});
+  app.context.recipe = new recipe.RecipeModel({ config });
+  app.context.mealPlan = new mealPlan.MealPlanModel({ database });
 
   app.use(koaBunyanLogger(logger));
   app.use(errors.createMiddleware());
   app.use(koaBunyanLogger.requestLogger());
   app.use(koaBunyanLogger.requestIdContext());
-  app.use(cors.createMiddleware(config));
+  app.use(cors.createMiddleware());
   app.use(koaBody());
   app.use(pub.routes());
   app.use(pub.allowedMethods());
