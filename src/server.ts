@@ -30,8 +30,10 @@ export function createServer(config: Config, logger: Logger, database: db.Databa
 
   // TODO: DefinitelyTyped types is wrong for this. Fix it!
   const { default: koaSslify } = require("koa-sslify");
+  if (config.nodeEnv === "production") {
+    app.use(koaSslify());
+  }
 
-  app.use(koaSslify());
   app.use(koaBunyanLogger(logger));
   app.use(errors.createMiddleware());
   app.use(koaBunyanLogger.requestLogger());
