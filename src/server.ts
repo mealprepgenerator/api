@@ -29,9 +29,10 @@ export function createServer(config: Config, logger: Logger, database: db.Databa
   app.context.mealPlan = new mealPlan.MealPlanModel({ database });
 
   // TODO: DefinitelyTyped types is wrong for this. Fix it!
-  const { default: koaSslify } = require("koa-sslify");
+  const { default: koaSslify, xForwardedProtoResolver: resolver } = require("koa-sslify");
+
   if (config.nodeEnv === "production") {
-    app.use(koaSslify());
+    app.use(koaSslify({ resolver }));
   }
 
   app.use(koaBunyanLogger(logger));
