@@ -41,6 +41,7 @@ export function createServer(
     app.use(koaSslify({ resolver }));
   }
 
+  // TODO: Expose this at some point.
   const { router: pubKoaRouter } = pub as any;
 
   app.use(koaBunyanLogger(logger));
