@@ -11,7 +11,7 @@ const client = new db.DatabaseClient(config.databaseUrl);
 function start(id?: number) {
   const logger = Logger.createLogger({
     level: config.logLevel,
-    name: `${config.logName}${id && `-${id}`}`
+    name: `${config.logName}${id ? `-${id}` : ""}`
   });
   const server = createServer(config, logger, client);
   server.listen(config.port);
