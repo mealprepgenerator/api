@@ -2,7 +2,6 @@ import * as Logger from "bunyan";
 import * as http from "http";
 import * as Koa from "koa";
 
-import koaBody = require("koa-body");
 import koaBunyanLogger = require("koa-bunyan-logger");
 
 import * as db from "./clients/database";
@@ -35,14 +34,15 @@ export function createServer(config: Config, logger: Logger, database: db.Databa
     app.use(koaSslify({ resolver }));
   }
 
+  const { router: pubKoaRouter } = pub as any;
+
   app.use(koaBunyanLogger(logger));
   app.use(errors.createMiddleware());
   app.use(koaBunyanLogger.requestLogger());
   app.use(koaBunyanLogger.requestIdContext());
   app.use(cors.createMiddleware());
-  app.use(koaBody());
-  app.use(pub.routes());
-  app.use(pub.allowedMethods());
+  app.use(pub.middleware());
+  app.use(pubKoaRouter.allowedMethods());
 
   return http.createServer(app.callback());
 }

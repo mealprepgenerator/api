@@ -1,5 +1,7 @@
 import * as squel from "squel";
 
+import Joi = require("joi");
+
 import shortid = require("shortid");
 
 import { DatabaseClient } from "../clients/database";
@@ -82,3 +84,13 @@ export class MealPlanModel {
     };
   }
 }
+
+export const mealPlanDataSchema = {
+  id: Joi.string().required(),
+  recipes: Joi.array().items([
+    {
+      recipeUrl: Joi.string().required(),
+      servings: Joi.number().required(),
+    },
+  ]).required(),
+};
