@@ -13,9 +13,7 @@ export function createMiddleware(): Koa.Middleware {
       ctx.status = err.status || 500;
 
       ctx.body = {
-        error: err.expose
-          ? err.message
-          : "Whoops, something went wrong",
+        error: err.expose ? err.message : "Whoops, something went wrong"
       };
 
       if (!err.expose) {

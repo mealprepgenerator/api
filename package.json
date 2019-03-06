@@ -4,7 +4,7 @@
   "description": "Meal Prep Generator's API",
   "main": "./dist/index.js",
   "scripts": {
-    "lint": "tslint './src/**/*.ts'",
+    "lint": "tslint -p ./tsconfig.json && prettier 'src/**/*.ts' --check",
     "test": "jest",
     "debug": "node --nolazy --inspect-brk=9229 ./dist/index.js | bunyan -o simple",
     "build": "tsc",
@@ -39,14 +39,30 @@
     "@types/node": "^10.12.21",
     "@types/pg": "^7.4.13",
     "@types/shortid": "0.0.29",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
     "jest": "^23.0.0",
+    "prettier": "^1.16.4",
     "ts-jest": "^23.0.0",
     "tslint": "5.12.1",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.3.1"
   },
   "jest": {
     "preset": "ts-jest",
     "rootDir": "./src",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ]
   }
 }

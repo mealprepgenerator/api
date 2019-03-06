@@ -30,7 +30,7 @@ export class MealPlanModel {
   }
 
   public async save(recipes: MealPlanRecipe[]): Promise<MealPlanData> {
-    return this.database.trans(async (client) => {
+    return this.database.trans(async client => {
       const newMealPlanId = shortid.generate();
 
       await client.query(
@@ -38,7 +38,7 @@ export class MealPlanModel {
           .insert()
           .into("meal_plan")
           .set("id", newMealPlanId)
-          .toParam(),
+          .toParam()
       );
 
       for (const recipe of recipes) {
@@ -49,13 +49,13 @@ export class MealPlanModel {
             .set("servings", recipe.servings)
             .set("meal_plan_id", newMealPlanId)
             .set("recipe_url", recipe.recipeUrl)
-            .toParam(),
+            .toParam()
         );
       }
 
       return {
         id: newMealPlanId,
-        recipes,
+        recipes
       };
     });
   }
@@ -68,7 +68,7 @@ export class MealPlanModel {
         .from("meal_plan", "m")
         .join("meal_plan_item", "i", "m.id = i.meal_plan_id")
         .where("m.id = ?", id)
-        .toParam(),
+        .toParam()
     );
 
     if (!result.rowCount) {
@@ -77,20 +77,22 @@ export class MealPlanModel {
 
     return {
       id: result.rows[0].meal_plan_id,
-      recipes: result.rows.map((item) => ({
+      recipes: result.rows.map(item => ({
         recipeUrl: item.recipe_url,
-        servings: item.servings,
-      })),
+        servings: item.servings
+      }))
     };
   }
 }
 
 export const mealPlanDataSchema = {
   id: Joi.string().required(),
-  recipes: Joi.array().items([
-    {
-      recipeUrl: Joi.string().required(),
-      servings: Joi.number().required(),
-    },
-  ]).required(),
+  recipes: Joi.array()
+    .items([
+      {
+        recipeUrl: Joi.string().required(),
+        servings: Joi.number().required()
+      }
+    ])
+    .required()
 };

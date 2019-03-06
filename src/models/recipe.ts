@@ -42,7 +42,7 @@ export class RecipeModel {
   public async get(recipeUrl: string): Promise<RecipeData> {
     const validateUrl = `${this.config.validateUrl}?recipeUrl=${recipeUrl}`;
     const { body: recipe } = await get(validateUrl, {
-      json: true,
+      json: true
     });
 
     const analyzeUrl = this.config.analyzeUrl;
@@ -50,9 +50,9 @@ export class RecipeModel {
       body: {
         ingr: recipe.ingredients.map((i: any) => i.text),
         title: recipe.name,
-        yield: recipe.recipeYield,
+        yield: recipe.recipeYield
       },
-      json: true,
+      json: true
     });
 
     const transform = {
@@ -65,10 +65,10 @@ export class RecipeModel {
         perDaily: nutrition.totalDaily,
         perWeight: nutrition.totalNutrients,
         totalCalories: nutrition.calories,
-        totalWeight: nutrition.totalWeight,
+        totalWeight: nutrition.totalWeight
       },
       servings: recipe.recipeYield,
-      url: decodeURIComponent(recipeUrl),
+      url: decodeURIComponent(recipeUrl)
     };
 
     const { error } = Joi.validate(transform, recipeDataSchema);
@@ -83,43 +83,45 @@ export class RecipeModel {
 export const nutrientValuesSchema = {
   label: Joi.string(),
   quantity: Joi.number().required(),
-  unit: Joi.string().required(),
+  unit: Joi.string().required()
 };
 
-export const nutrientDataSchema = Joi
-  .object()
+export const nutrientDataSchema = Joi.object()
   .required()
   .keys({
     CHOCDF: nutrientValuesSchema,
     FAT: nutrientValuesSchema,
-    PROCNT: nutrientValuesSchema,
+    PROCNT: nutrientValuesSchema
   })
   .requiredKeys(["CHOCDF", "FAT", "PROCNT"])
   .unknown(true);
 
-export const nutrientKcalDataSchema = Joi
-  .object()
+export const nutrientKcalDataSchema = Joi.object()
   .required()
   .keys({
     CHOCDF_KCAL: nutrientValuesSchema,
     FAT_KCAL: nutrientValuesSchema,
-    PROCNT_KCAL: nutrientValuesSchema,
+    PROCNT_KCAL: nutrientValuesSchema
   })
   .requiredKeys(["CHOCDF_KCAL", "FAT_KCAL", "PROCNT_KCAL"])
   .unknown(true);
 
 export const recipeDataSchema = {
   image: Joi.string(),
-  ingredients: Joi.array().items([Joi.string()]).required(),
-  instructions: Joi.array().items([Joi.string()]).required(),
+  ingredients: Joi.array()
+    .items([Joi.string()])
+    .required(),
+  instructions: Joi.array()
+    .items([Joi.string()])
+    .required(),
   name: Joi.string().required(),
   nutrition: {
     perCalories: nutrientKcalDataSchema,
     perDaily: nutrientDataSchema,
     perWeight: nutrientDataSchema,
     totalCalories: Joi.number().required(),
-    totalWeight: Joi.number().required(),
+    totalWeight: Joi.number().required()
   },
   servings: Joi.number().required(),
-  url: Joi.string().required(),
+  url: Joi.string().required()
 };

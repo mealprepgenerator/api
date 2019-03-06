@@ -5,7 +5,7 @@ export class DatabaseClient {
 
   constructor(databaseUrl: string) {
     this.pool = new Pool({
-      connectionString: databaseUrl,
+      connectionString: databaseUrl
     });
   }
 

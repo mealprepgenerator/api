@@ -20,13 +20,13 @@ export function createRouter() {
       validate: {
         output: {
           200: {
-            body: recipeDataSchema,
-          },
+            body: recipeDataSchema
+          }
         },
         query: {
-          recipeUrl: Joi.string().required(),
-        },
-      },
+          recipeUrl: Joi.string().required()
+        }
+      }
     },
     {
       handler: showMealPlan,
@@ -35,13 +35,13 @@ export function createRouter() {
       validate: {
         output: {
           200: {
-            body: mealPlanDataSchema,
-          },
+            body: mealPlanDataSchema
+          }
         },
         params: {
-          planId: mealPlanDataSchema.id,
-        },
-      },
+          planId: mealPlanDataSchema.id
+        }
+      }
     },
     {
       handler: saveMealPlan,
@@ -49,16 +49,16 @@ export function createRouter() {
       path: "/plans",
       validate: {
         body: {
-          recipes: mealPlanDataSchema.recipes,
+          recipes: mealPlanDataSchema.recipes
         },
         output: {
           200: {
-            body: mealPlanDataSchema,
-          },
+            body: mealPlanDataSchema
+          }
         },
-        type: "json",
-      },
-    },
+        type: "json"
+      }
+    }
   ];
 
   pub.route(routes);
