@@ -1,6 +1,6 @@
 {
   "name": "@mealprepgenerator/api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Meal Prep Generator's API",
   "main": "./dist/index.js",
   "scripts": {
