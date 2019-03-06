@@ -5,6 +5,7 @@ import * as env from "env-var";
 dotenv.config();
 
 export interface Config {
+  webConcurrency: number;
   databaseUrl: string;
   validateUrl: string;
   analyzeUrl: string;
@@ -43,6 +44,7 @@ export function createConfig(): Config {
     validateUrl: env
       .get("VALIDATE_URL")
       .required()
-      .asString()
+      .asString(),
+    webConcurrency: env.get("WEB_CONCURRENCY", "1").asIntPositive()
   };
 }
