@@ -7,7 +7,7 @@ import shortid = require("shortid");
 import { DatabaseClient } from "../clients/database";
 
 export interface DraftPlanData {
-  groups: MealGroupData[];
+  groups: DraftGroupData[];
 }
 
 export interface DraftGroupData {
@@ -20,16 +20,21 @@ export interface DraftPlanItem {
   recipeUrl: string;
 }
 
-export interface MealPlanData extends DraftPlanData {
+export interface MealPlanData {
   id: string;
+  groups: MealGroupData[];
 }
 
-export interface MealPlanItem extends DraftPlanItem {
+export interface MealPlanItem {
   id: number;
+  servings: number;
+  recipeUrl: string;
 }
 
-export interface MealGroupData extends DraftGroupData {
+export interface MealGroupData {
   id: number;
+  label: string;
+  items: MealPlanItem[];
 }
 
 export interface MealPlanParams {
