@@ -157,11 +157,16 @@ export const mealPlanItemSchema = {
 };
 
 export const mealPlanGroupSchema = {
-  ...draftPlanGroupSchema,
-  id: Joi.number().required()
+  id: Joi.number().required(),
+  items: Joi.array()
+    .items([mealPlanItemSchema])
+    .required(),
+  label: Joi.string().required()
 };
 
 export const mealPlanDataSchema = {
-  ...draftPlanDataSchema,
+  groups: Joi.array()
+    .items([mealPlanGroupSchema])
+    .required(),
   id: Joi.string().required()
 };
