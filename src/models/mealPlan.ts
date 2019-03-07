@@ -66,6 +66,7 @@ export class MealPlanModel {
             .insert()
             .into("meal_group")
             .set("label", group.label)
+            .set("meal_plan_id", newMealPlanId)
             .toParam()
         );
 
