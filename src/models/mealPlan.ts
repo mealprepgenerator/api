@@ -127,8 +127,16 @@ export class MealPlanModel {
     }
 
     return {
-      groups: result.rows,
-      id: result.rows[0].meal_plan_id
+      groups: result.rows.map(g => ({
+        id: g.id,
+        items: g.items.map((i: any) => ({
+          id: i.id,
+          recipeUrl: i.recipe_url,
+          servings: i.servings
+        })),
+        label: g.label
+      })),
+      id
     };
   }
 }
