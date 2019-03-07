@@ -49,7 +49,7 @@ export function createRouter() {
       path: "/plans",
       validate: {
         body: {
-          recipes: mealPlanDataSchema.recipes
+          groups: mealPlanDataSchema.groups
         },
         output: {
           200: {

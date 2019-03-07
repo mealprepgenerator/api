@@ -6,14 +6,30 @@ import shortid = require("shortid");
 
 import { DatabaseClient } from "../clients/database";
 
-export interface MealPlanData {
-  id: number;
-  recipes: MealPlanRecipe[];
+export interface DraftPlanData {
+  groups: MealGroupData[];
 }
 
-export interface MealPlanRecipe {
+export interface DraftGroupData {
+  label: string;
+  items: DraftPlanItem[];
+}
+
+export interface DraftPlanItem {
   servings: number;
   recipeUrl: string;
+}
+
+export interface MealPlanData extends DraftPlanData {
+  id: string;
+}
+
+export interface MealPlanItem extends DraftPlanItem {
+  id: number;
+}
+
+export interface MealGroupData extends DraftGroupData {
+  id: number;
 }
 
 export interface MealPlanParams {
@@ -29,7 +45,7 @@ export class MealPlanModel {
     this.sqlBuilder = squel.useFlavour("postgres");
   }
 
-  public async save(recipes: MealPlanRecipe[]): Promise<MealPlanData> {
+  public async save(plan: DraftPlanData): Promise<MealPlanData> {
     return this.database.trans(async client => {
       const newMealPlanId = shortid.generate();
 
@@ -41,21 +57,50 @@ export class MealPlanModel {
           .toParam()
       );
 
-      for (const recipe of recipes) {
-        await client.query(
+      const groupData: MealGroupData[] = [];
+      for (const group of plan.groups) {
+        const {
+          rows: [g]
+        } = await client.query(
           this.sqlBuilder
             .insert()
-            .into("meal_plan_item")
-            .set("servings", recipe.servings)
-            .set("meal_plan_id", newMealPlanId)
-            .set("recipe_url", recipe.recipeUrl)
+            .into("meal_plan_group")
+            .set("label", group.label)
             .toParam()
         );
+
+        const items: MealPlanItem[] = [];
+        for (const item of group.items) {
+          const {
+            rows: [r]
+          } = await client.query(
+            this.sqlBuilder
+              .insert()
+              .into("meal_plan_item")
+              .set("servings", item.servings)
+              .set("meal_plan_id", newMealPlanId)
+              .set("group_id", g.id)
+              .set("recipe_url", item.recipeUrl)
+              .toParam()
+          );
+
+          items.push({
+            id: r.id,
+            recipeUrl: item.recipeUrl,
+            servings: item.servings
+          });
+        }
+
+        groupData.push({
+          id: g.id,
+          items,
+          label: group.label
+        });
       }
 
       return {
-        id: newMealPlanId,
-        recipes
+        groups: groupData,
+        id: newMealPlanId
       };
     });
   }
@@ -64,10 +109,13 @@ export class MealPlanModel {
     const result = await this.database.query(
       this.sqlBuilder
         .select()
-        .field("i.*")
-        .from("meal_plan", "m")
-        .join("meal_plan_item", "i", "m.id = i.meal_plan_id")
-        .where("m.id = ?", id)
+        .field("g.id")
+        .field("g.label")
+        .field("json_agg(i.*)", "items")
+        .from("meal_group", "g")
+        .join("meal_plan_item", "i", "g.id = i.group_id")
+        .where("g.meal_plan_id = ?", id)
+        .group("g.id")
         .toParam()
     );
 
@@ -76,23 +124,28 @@ export class MealPlanModel {
     }
 
     return {
-      id: result.rows[0].meal_plan_id,
-      recipes: result.rows.map(item => ({
-        recipeUrl: item.recipe_url,
-        servings: item.servings
-      }))
+      groups: result.rows,
+      id: result.rows[0].meal_plan_id
     };
   }
 }
 
-export const mealPlanDataSchema = {
-  id: Joi.string().required(),
-  recipes: Joi.array()
-    .items([
-      {
-        recipeUrl: Joi.string().required(),
-        servings: Joi.number().required()
-      }
-    ])
+export const mealPlanItemSchema = {
+  id: Joi.number().required(),
+  recipeUrl: Joi.string().required(),
+  servings: Joi.number().required()
+};
+
+export const mealPlanGroupSchema = {
+  id: Joi.number().required(),
+  items: Joi.array()
+    .items([mealPlanItemSchema])
     .required()
+};
+
+export const mealPlanDataSchema = {
+  groups: Joi.array()
+    .items([mealPlanGroupSchema])
+    .required(),
+  id: Joi.string().required()
 };
