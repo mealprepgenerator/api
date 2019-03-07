@@ -67,6 +67,7 @@ export class MealPlanModel {
             .into("meal_group")
             .set("label", group.label)
             .set("meal_plan_id", newMealPlanId)
+            .returning("*")
             .toParam()
         );
 
@@ -82,6 +83,7 @@ export class MealPlanModel {
               .set("meal_plan_id", newMealPlanId)
               .set("group_id", g.id)
               .set("recipe_url", item.recipeUrl)
+              .returning("*")
               .toParam()
           );
 
