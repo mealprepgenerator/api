@@ -64,7 +64,7 @@ export class MealPlanModel {
         } = await client.query(
           this.sqlBuilder
             .insert()
-            .into("meal_plan_group")
+            .into("meal_group")
             .set("label", group.label)
             .toParam()
         );
