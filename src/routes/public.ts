@@ -4,7 +4,7 @@ import analyzeRecipe from "../controllers/analyzeRecipe";
 import saveMealPlan from "../controllers/saveMealPlan";
 import showMealPlan from "../controllers/showMealPlan";
 
-import { mealPlanDataSchema } from "../models/mealPlan";
+import { draftPlanDataSchema, mealPlanDataSchema } from "../models/mealPlan";
 import { recipeDataSchema } from "../models/recipe";
 
 const Joi = router.Joi;
@@ -48,9 +48,7 @@ export function createRouter() {
       method: "post",
       path: "/plans",
       validate: {
-        body: {
-          groups: mealPlanDataSchema.groups
-        },
+        body: draftPlanDataSchema,
         output: {
           200: {
             body: mealPlanDataSchema

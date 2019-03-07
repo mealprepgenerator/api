@@ -130,22 +130,34 @@ export class MealPlanModel {
   }
 }
 
-export const mealPlanItemSchema = {
-  id: Joi.number().required(),
+export const draftPlanItemSchema = {
   recipeUrl: Joi.string().required(),
   servings: Joi.number().required()
 };
 
-export const mealPlanGroupSchema = {
-  id: Joi.number().required(),
+export const draftPlanGroupSchema = {
   items: Joi.array()
-    .items([mealPlanItemSchema])
+    .items([draftPlanItemSchema])
     .required()
 };
 
-export const mealPlanDataSchema = {
+export const draftPlanDataSchema = {
   groups: Joi.array()
-    .items([mealPlanGroupSchema])
-    .required(),
+    .items([draftPlanGroupSchema])
+    .required()
+};
+
+export const mealPlanItemSchema = {
+  ...draftPlanItemSchema,
+  id: Joi.number().required()
+};
+
+export const mealPlanGroupSchema = {
+  ...draftPlanGroupSchema,
+  id: Joi.number().required()
+};
+
+export const mealPlanDataSchema = {
+  ...draftPlanDataSchema,
   id: Joi.string().required()
 };
