@@ -138,7 +138,8 @@ export const draftPlanItemSchema = {
 export const draftPlanGroupSchema = {
   items: Joi.array()
     .items([draftPlanItemSchema])
-    .required()
+    .required(),
+  label: Joi.string().required()
 };
 
 export const draftPlanDataSchema = {
