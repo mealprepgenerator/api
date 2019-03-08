@@ -119,9 +119,12 @@ export class MealPlanModel {
         .select()
         .field("g.id")
         .field("g.label")
-        .field("json_agg(i.*)", "items")
+        .field(
+          "COALESCE(json_agg(i.*) FILTER (WHERE i.id IS NOT NULL), '[]')",
+          "items"
+        )
         .from("meal_group", "g")
-        .join("meal_plan_item", "i", "g.id = i.group_id")
+        .left_join("meal_plan_item", "i", "g.id = i.group_id")
         .where("g.meal_plan_id = ?", id)
         .group("g.id")
         .toParam()
